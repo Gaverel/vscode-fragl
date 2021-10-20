@@ -1,0 +1,25 @@
+{
+    "name": "vscode-fragl",
+    "displayName": "vscode-fragl",
+    "description": "Fragl support in VS Code",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.61.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "fragl",
+            "aliases": ["FRAGL", "fragl"],
+            "extensions": [".fg"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "fragl",
+            "scopeName": "source.fragl",
+            "path": "./syntaxes/fragl.tmLanguage.json"
+        }]
+    }
+}
