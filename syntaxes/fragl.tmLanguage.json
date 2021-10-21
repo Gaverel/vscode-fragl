@@ -11,11 +11,57 @@
 		},
 		{
 			"include": "#tag"
+		},
+		{
+			"include": "#reference"
 		}
 	],
 	"repository": {
+		"param-then-attributes": {
+			"patterns": [
+				{
+					"include": "#parameter-list"
+				},
+				{
+					"include": "#attribute"
+				}
+			]
+		},
+		"class-instantiation": {
+			"patterns": [
+				{
+					"begin": "(?<!<)(::)([a-zA-Z][.0-9_a-zA-Z]*)\\s*(\\()",
+					"beginCaptures": {
+						"1": { "name": "keyword.operator.constructor.fragl" },
+						"2": { "name": "entity.name.class.fragl" },
+						"3": { "name": "punctuation.definition.class.parameter-list.begin.fragl"}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.class.parameter-list.end.fragl" }
+					},
+					"name": "meta.class-instantiation.fragl",
+					"patterns": [
+						{
+							"include": "#argument"
+						}
+					]
+				}
+			]
+		},
 		"attribute": {
 			"patterns": [
+				{
+					"include": "#class-instantiation"
+				},
+				{
+					"match": "(?<!<)(::)([a-zA-Z][.0-9_a-zA-Z]*)\\s*(?!\\()",
+					"captures": {
+						"1": { "name": "keyword.operator.constructor.fragl" },
+						"2": { "name": "entity.name.class.fragl" }
+					},
+					"name": "meta.tag.class.opening.fragl"
+				},
 				{
 					"begin": "([^\\x{0020}\"'<>/=\\x{0000}-\\x{001F}\\x{007F}-\\x{009F}\\x{FDD0}-\\x{FDEF}\\x{FFFE}\\x{FFFF}\\x{1FFFE}\\x{1FFFF}\\x{2FFFE}\\x{2FFFF}\\x{3FFFE}\\x{3FFFF}\\x{4FFFE}\\x{4FFFF}\\x{5FFFE}\\x{5FFFF}\\x{6FFFE}\\x{6FFFF}\\x{7FFFE}\\x{7FFFF}\\x{8FFFE}\\x{8FFFF}\\x{9FFFE}\\x{9FFFF}\\x{AFFFE}\\x{AFFFF}\\x{BFFFE}\\x{BFFFF}\\x{CFFFE}\\x{CFFFF}\\x{DFFFE}\\x{DFFFF}\\x{EFFFE}\\x{EFFFF}\\x{FFFFE}\\x{FFFFF}\\x{10FFFE}\\x{10FFFF}]+)",
 					"beginCaptures": {
@@ -23,9 +69,9 @@
 							"name": "entity.other.attribute-name.fragl"
 						}
 					},
-					"comment": "Anything else that is valid",
+					"comment": "Unicode key-value attributes",
 					"end": "(?=\\s*+[^=\\s])",
-					"name": "meta.attribute.unrecognized.$1.fragl",
+					"name": "meta.attribute.$1.fragl",
 					"patterns": [
 						{
 							"include": "#attribute-interior"
@@ -128,6 +174,67 @@
 				}
 			]
 		},
+		"argument": {
+			"patterns": [
+				{
+					"include": "#class-instantiation"
+				},
+				{
+					"begin": "(@)?(\\[)",
+					"beginCaptures": {
+						"1": { "name": "keyword.control.loop.list-prefix.fragl" },
+						"2": { "name": "punctuation.definition.list-literal.begin.fragl" }
+					},
+					"end": "\\]",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.list-literal.end.fragl" }
+					},
+					"name": "meta.list-literal.fragl",
+					"patterns": [
+						{
+							"include": "#argument"
+						}
+					]
+				},
+				{
+					"begin": "(?<=\\])\\s*(?={)",
+					"end": "=>",
+					"endCaptures": {
+						"0": { "name": "keyword.control.function.loop.fragl" }
+					},
+					"name": "meta.list-literal.loop.fragl",
+					"patterns": [
+						{
+							"include": "#parameter-list"
+						}
+					]
+				},
+				{
+					"include": "#string"
+				},
+				{
+					"begin": "([a-zA-Z][0-9_a-zA-Z]*)\\s*(\\()",
+					"beginCaptures": {
+						"1": { "name": "entity.name.function.fragl" },
+						"2": { "name": "punctuation.definition.function.argument-list.begin.fragl" }
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.function.argument-list.end.fragl" }
+					},
+					"name": "meta.function-invocation.fragl",
+					"patterns": [
+						{
+							"include": "#argument"
+						}
+					]
+				},
+				{
+					"match": "\\b[a-zA-Z][0-9_a-zA-Z]*\\b",
+					"name": "variable.name.fragl"
+				}
+			]
+		},
 		"parameter-list": {
 			"begin": "{",
 			"end": "}",
@@ -136,6 +243,17 @@
 				{
 					"match": "\\b[a-zA-Z][.0-9_a-zA-Z]*\\b",
 					"name": "variable.parameter.fragl"
+				}
+			]
+		},
+		"reference": {
+			"patterns": [
+				{
+					"match": "(#)([a-zA-Z][.0-9_a-zA-Z]*)",
+					"captures": {
+						"1": { "name": "keyword.operator.reference.fragl" },
+						"2": { "name": "variable.name.reference.fragl" }
+					}
 				}
 			]
 		},
@@ -162,11 +280,25 @@
 					"beginCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.begin.fragl" }
 					},
-					"end": "(</)([a-zA-Z][.0-9_a-zA-Z]*)(>)",
+					"end": "(</)([a-zA-Z][.0-9_a-zA-Z]*)?(>)",
 					"endCaptures": {
 						"1": { "name": "punctuation.definition.tag.closing.begin.fragl" },
 						"2": { "name": "entity.name.section.loop.fragl" },
 						"3": { "name": "punctuation.definition.tag.closing.end.fragl" }
+					},
+					"name": "meta.tag.loop.interior.fragl",
+					"patterns": [
+						{ "include": "$self" }
+					]
+				},
+				{
+					"begin": "<(?=@\\s*\\()",
+					"beginCaptures": {
+						"0": { "name": "punctuation.definition.tag.opening.begin.fragl" }
+					},
+					"end": "</>",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.tag.loop.closing.fragl" }
 					},
 					"name": "meta.tag.loop.interior.fragl",
 					"patterns": [
@@ -221,7 +353,7 @@
 					},
 					"name": "meta.tag.class.opening.fragl",
 					"patterns": [
-						{ "include": "#parameter-list" }
+						{ "include": "#param-then-attributes" }
 					]
 				},
 				{
@@ -234,9 +366,24 @@
 					"endCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.end.fragl" }
 					},
-					"name": "meta.tag.class.opening.fragl",
+					"name": "meta.tag.loop.for-in.fragl",
 					"patterns": [
-						{ "include": "#parameter-list" }
+						{ "include": "#param-then-attributes" }
+					]
+				},
+				{
+					"begin": "(?<=<)(@)\\s*(\\()",
+					"beginCaptures": {
+						"1": { "name": "keyword.control.loop.fragl" },
+						"2": { "name": "punctuation.definition.loop.argument-list.begin.fragl" }
+					},
+					"end": "\\)>",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.loop.argument-list.end.fragl" }
+					},
+					"name": "meta.tag.loop.while.fragl",
+					"patterns": [
+						{ "include": "#argument" }
 					]
 				},
 				{
@@ -250,7 +397,7 @@
 					},
 					"name": "meta.tag.function.opening.fragl",
 					"patterns": [
-						{ "include": "#parameter-list" }
+						{ "include": "#param-then-attributes" }
 					]
 				},
 				{
@@ -264,7 +411,7 @@
 					},
 					"name": "meta.tag.object.opening.fragl",
 					"patterns": [
-						{ "include": "#parameter-list" }
+						{ "include": "#attribute" }
 					]
 				},
 				{
@@ -278,6 +425,7 @@
 					},
 					"name": "meta.tag.expression.fragl",
 					"patterns": [
+						{ "include": "#argument" }
 					]
 				}
 			]
