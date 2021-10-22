@@ -316,6 +316,14 @@
 					},
 					"name": "meta.tag.cond.interior.fragl",
 					"patterns": [
+						{
+							"match": "(<)(:)(>)",
+							"captures": {
+								"1": { "name": "punctuation.definition.tag.cond.else.begin.fragl" },
+								"2": { "name": "keyword.control.cond.else.fragl" },
+								"3": { "name": "punctuation.definition.tag.cond.else.endfragl" }
+							}
+						},
 						{ "include": "$self" }
 					]
 				},
