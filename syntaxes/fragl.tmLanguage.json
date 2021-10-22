@@ -177,6 +177,9 @@
 		"argument": {
 			"patterns": [
 				{
+					"include": "#comment"
+				},
+				{
 					"include": "#class-instantiation"
 				},
 				{
