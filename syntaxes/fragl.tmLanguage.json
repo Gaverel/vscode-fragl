@@ -294,13 +294,27 @@
 				{
 					"begin": "<(?=@\\s*\\()",
 					"beginCaptures": {
-						"0": { "name": "punctuation.definition.tag.opening.begin.fragl" }
+						"0": { "name": "punctuation.definition.tag.loop.opening.begin.fragl" }
 					},
 					"end": "</>",
 					"endCaptures": {
 						"0": { "name": "punctuation.definition.tag.loop.closing.fragl" }
 					},
 					"name": "meta.tag.loop.interior.fragl",
+					"patterns": [
+						{ "include": "$self" }
+					]
+				},
+				{
+					"begin": "<(?=\\?\\s*(?:[a-zA-Z][.0-9_a-zA-Z]*\\(?|\\())",
+					"beginCaptures": {
+						"0": { "name": "punctuation.definition.tag.cond.opening.begin.fragl" }
+					},
+					"end": "</>",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.tag.cond.closing.fragl" }
+					},
+					"name": "meta.tag.cond.interior.fragl",
 					"patterns": [
 						{ "include": "$self" }
 					]
@@ -372,6 +386,21 @@
 					]
 				},
 				{
+					"begin": "(?<=<)(\\?)([a-zA-Z][.0-9_a-zA-Z]*)",
+					"beginCaptures": {
+						"1": { "name": "keyword.control.loop.fragl" },
+						"2": { "name": "entity.name.section.loop.fragl" }
+					},
+					"end": ">",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.tag.opening.end.fragl" }
+					},
+					"name": "meta.tag.cond.variable.fragl",
+					"patterns": [
+						{ "include": "#param-then-attributes" }
+					]
+				},
+				{
 					"begin": "(?<=<)(@)\\s*(\\()",
 					"beginCaptures": {
 						"1": { "name": "keyword.control.loop.fragl" },
@@ -382,6 +411,22 @@
 						"0": { "name": "punctuation.definition.loop.argument-list.end.fragl" }
 					},
 					"name": "meta.tag.loop.while.fragl",
+					"patterns": [
+						{ "include": "#argument" }
+					]
+				},
+				{
+					"begin": "(?<=<)(\\?)\\s*([a-zA-Z][.0-9_a-zA-Z]*)?(\\()",
+					"beginCaptures": {
+						"1": { "name": "keyword.control.cond.fragl" },
+						"2": { "name": "entity.name.variable.fragl" },
+						"3": { "name": "punctuation.definition.cond.argument-list.begin.fragl" }
+					},
+					"end": "\\)>",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.cond.argument-list.end.fragl" }
+					},
+					"name": "meta.tag.cond.expression.fragl",
 					"patterns": [
 						{ "include": "#argument" }
 					]
