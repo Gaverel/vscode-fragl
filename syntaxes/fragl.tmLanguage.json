@@ -17,6 +17,87 @@
 		}
 	],
 	"repository": {
+		"number": {
+			"patterns": [
+				{
+					"name": "constant.numeric.hex.fragl",
+					"match": "\\b(?<!\\$)0(?:x|X)[0-9a-fA-F][0-9a-fA-F_]*(n)?\\b(?!\\$)",
+					"captures": {
+						"1": {
+							"name": "storage.type.numeric.bigint.fragl"
+						}
+					}
+				},
+				{
+					"name": "constant.numeric.binary.fragl",
+					"match": "\\b(?<!\\$)0(?:b|B)[01][01_]*(n)?\\b(?!\\$)",
+					"captures": {
+						"1": {
+							"name": "storage.type.numeric.bigint.fragl"
+						}
+					}
+				},
+				{
+					"name": "constant.numeric.octal.fragl",
+					"match": "\\b(?<!\\$)0(?:o|O)?[0-7][0-7_]*(n)?\\b(?!\\$)",
+					"captures": {
+						"1": {
+							"name": "storage.type.numeric.bigint.fragl"
+						}
+					}
+				},
+				{
+					"match": "(?x)\n(?<!\\$)(?:\n  (?:\\b[0-9][0-9_]*(\\.)[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*(n)?\\b)| # 1.1E+3\n  (?:\\b[0-9][0-9_]*(\\.)[eE][+-]?[0-9][0-9_]*(n)?\\b)|             # 1.E+3\n  (?:\\B(\\.)[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*(n)?\\b)|             # .1E+3\n  (?:\\b[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*(n)?\\b)|                 # 1E+3\n  (?:\\b[0-9][0-9_]*(\\.)[0-9][0-9_]*(n)?\\b)|                      # 1.1\n  (?:\\b[0-9][0-9_]*(\\.)(n)?\\B)|                                  # 1.\n  (?:\\B(\\.)[0-9][0-9_]*(n)?\\b)|                                  # .1\n  (?:\\b[0-9][0-9_]*(n)?\\b(?!\\.))                                 # 1\n)(?!\\$)",
+					"captures": {
+						"0": {
+							"name": "constant.numeric.decimal.fragl"
+						},
+						"1": {
+							"name": "meta.delimiter.decimal.period.fragl"
+						},
+						"2": {
+							"name": "storage.type.numeric.bigint.fragl"
+						},
+						"3": {
+							"name": "meta.delimiter.decimal.period.fragl"
+						},
+						"4": {
+							"name": "storage.type.numeric.bigint.fragl"
+						},
+						"5": {
+							"name": "meta.delimiter.decimal.period.fragl"
+						},
+						"6": {
+							"name": "storage.type.numeric.bigint.fragl"
+						},
+						"7": {
+							"name": "storage.type.numeric.bigint.fragl"
+						},
+						"8": {
+							"name": "meta.delimiter.decimal.period.fragl"
+						},
+						"9": {
+							"name": "storage.type.numeric.bigint.fragl"
+						},
+						"10": {
+							"name": "meta.delimiter.decimal.period.fragl"
+						},
+						"11": {
+							"name": "storage.type.numeric.bigint.fragl"
+						},
+						"12": {
+							"name": "meta.delimiter.decimal.period.fragl"
+						},
+						"13": {
+							"name": "storage.type.numeric.bigint.fragl"
+						},
+						"14": {
+							"name": "storage.type.numeric.bigint.fragl"
+						}
+					}
+				}
+			]
+		},
 		"param-then-attributes": {
 			"patterns": [
 				{
@@ -212,18 +293,11 @@
 		},
 		"argument": {
 			"patterns": [
-				{
-					"include": "#comment"
-				},
-				{
-					"include": "#class-instantiation"
-				},
-				{
-					"include": "#constant"
-				},
-				{
-					"include": "#operator"
-				},
+				{ "include": "#comment" },
+				{ "include": "#class-instantiation" },
+				{ "include": "#constant" },
+				{ "include": "#number" },
+				{ "include": "#operator" },
 				{
 					"begin": "(@)?(\\[)",
 					"beginCaptures": {
@@ -299,6 +373,25 @@
 						"1": { "name": "keyword.operator.reference.fragl" },
 						"2": { "name": "variable.name.reference.fragl" }
 					}
+				},
+				{
+					"begin": "(#)(:)?([a-zA-Z][.0-9_a-zA-Z]*)?(\\()",
+					"beginCaptures": {
+						"1": { "name": "keyword.operator.reference.fragl" },
+						"2": { "name": "storage.type.class.fragl" },
+						"3": { "name": "entity.name.class.fragl" },
+						"4": { "name": "punctuation.definition.reference.expression.begin.fragl" }
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.reference.expression.end.fragl" }
+					},
+					"name": "meta.reference-expression.fragl",
+					"patterns": [
+						{
+							"include": "#argument"
+						}
+					]
 				}
 			]
 		},
@@ -337,7 +430,7 @@
 					]
 				},
 				{
-					"begin": "<(?=@\\s*\\()",
+					"begin": "<(?=@\\s*[\\(\\[])",
 					"beginCaptures": {
 						"0": { "name": "punctuation.definition.tag.loop.opening.begin.fragl" }
 					},
@@ -465,6 +558,25 @@
 						"2": { "name": "punctuation.definition.tag.loop.opening.end.fragl" }
 					},
 					"name": "meta.tag.loop.while.fragl",
+					"patterns": [
+						{ "include": "#argument" }
+					]
+				},
+				{
+					"begin": "(?<=<)(@)\\s*(\\[)",
+					"beginCaptures": {
+						"1": { "name": "keyword.control.loop.fragl" },
+						"2": { "name": "punctuation.definition.loop.literal-list.begin.fragl" }
+					},
+					"end": "(\\])\\s*(\\{)\\s*([a-zA-Z][.0-9_a-zA-Z]*)\\s*(\\})\\s*(>)",
+					"endCaptures": {
+						"1": { "name": "punctuation.definition.loop.literal-list.end.fragl" },
+						"2": { "name": "punctuation.definition.loop.parameter.begin.fragl" },
+						"3": { "name": "variable.parameter.loop.fragl" },
+						"4": { "name": "punctuation.definition.loop.parameter.end.fragl" },
+						"5": { "name": "punctuation.definition.tag.loop.opening.end.fragl" }
+					},
+					"name": "meta.tag.loop.for-in.literal.fragl",
 					"patterns": [
 						{ "include": "#argument" }
 					]
