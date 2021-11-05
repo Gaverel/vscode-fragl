@@ -10,6 +10,7 @@
         // ["<@", ">"],
         // ["<?(", ")>"],
         // ["<?", ">"],
+        ["<=", ">="],
         ["</", ">"],
         ["</", "/>"],
 		["<", ">"],
@@ -26,13 +27,11 @@
 		{ "open": "{", "close": "}"},
 		{ "open": "[", "close": "]"},
 		{ "open": "(", "close": ")" },
-		{ "open": "'", "close": "'" },
 		{ "open": "\"", "close": "\"" },
 		{ "open": "<!--", "close": "-->", "notIn": [ "comment", "string" ]}
     ],
     // symbols that can be used to surround a selection
     "surroundingPairs": [
-		{ "open": "'", "close": "'" },
 		{ "open": "\"", "close": "\"" },
 		{ "open": "{", "close": "}"},
 		{ "open": "[", "close": "]"},

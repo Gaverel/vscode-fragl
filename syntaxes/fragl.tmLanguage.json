@@ -299,12 +299,12 @@
 				{ "include": "#number" },
 				{ "include": "#operator" },
 				{
-					"begin": "(@)?(\\[)",
+					"begin": "(@)?(\\()",
 					"beginCaptures": {
 						"1": { "name": "keyword.control.loop.list-prefix.fragl" },
 						"2": { "name": "punctuation.definition.list-literal.begin.fragl" }
 					},
-					"end": "\\]",
+					"end": "\\)",
 					"endCaptures": {
 						"0": { "name": "punctuation.definition.list-literal.end.fragl" }
 					},
@@ -316,7 +316,7 @@
 					]
 				},
 				{
-					"begin": "(?<=\\])\\s*(?={)",
+					"begin": "(?<=\\))\\s*(?={)",
 					"end": ":",
 					"endCaptures": {
 						"0": { "name": "keyword.control.function.loop.fragl" }
@@ -482,6 +482,22 @@
 					]
 				},
 				{
+					"begin": "<=(?=[a-zA-Z].*[^/]>=)",
+					"beginCaptures": {
+						"0": { "name": "punctuation.definition.tag.opening.begin.fragl" }
+					},
+					"end": "(</)([a-zA-Z][.0-9_a-zA-Z]*)(>)",
+					"endCaptures": {
+						"1": { "name": "punctuation.definition.tag.closing.begin.fragl" },
+						"2": { "name": "entity.name.tag.case.fragl" },
+						"3": { "name": "punctuation.definition.tag.closing.end.fragl" }
+					},
+					"name": "meta.tag.case.interior.fragl",
+					"patterns": [
+						{ "include": "$self" }
+					]
+				},
+				{
 					"begin": "<(?=[a-zA-Z].*[^/]>)",
 					"beginCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.begin.fragl" }
@@ -557,7 +573,23 @@
 						"1": { "name": "punctuation.definition.loop.argument-list.end.fragl" },
 						"2": { "name": "punctuation.definition.tag.loop.opening.end.fragl" }
 					},
-					"name": "meta.tag.loop.while.fragl",
+					"name": "meta.tag.loop.for-in.fragl",
+					"patterns": [
+						{ "include": "#argument" }
+					]
+				},
+				{
+					"begin": "(?<=<)(@)\\s*(\\[)",
+					"beginCaptures": {
+						"1": { "name": "keyword.control.loop.fragl" },
+						"2": { "name": "punctuation.definition.loop.argument-list.begin.fragl" }
+					},
+					"end": "(\\])(>)",
+					"endCaptures": {
+						"1": { "name": "punctuation.definition.loop.generative.argument-list.end.fragl" },
+						"2": { "name": "punctuation.definition.tag.loop.generative.opening.end.fragl" }
+					},
+					"name": "meta.tag.loop.generative.fragl",
 					"patterns": [
 						{ "include": "#argument" }
 					]
@@ -610,6 +642,20 @@
 					"name": "meta.tag.function.opening.fragl",
 					"patterns": [
 						{ "include": "#param-then-attributes" }
+					]
+				},
+				{
+					"begin": "(?<=<=)([a-zA-Z][.0-9_a-zA-Z]*)(?=.*>=)",
+					"beginCaptures": {
+						"1": { "name": "variable.parameter.case.fragl" }
+					},
+					"end": ">=",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.tag.opening.end.fragl" }
+					},
+					"name": "meta.tag.case.opening.fragl",
+					"patterns": [
+						{ "include": "#attribute" }
 					]
 				},
 				{
