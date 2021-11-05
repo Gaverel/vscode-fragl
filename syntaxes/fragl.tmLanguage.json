@@ -111,7 +111,7 @@
 		"class-instantiation": {
 			"patterns": [
 				{
-					"begin": "(?<!<)(::)([a-zA-Z][.0-9_a-zA-Z]*)\\s*(\\()",
+					"begin": "(::)([a-zA-Z][.0-9_a-zA-Z]*)\\s*(\\()",
 					"beginCaptures": {
 						"1": { "name": "storage.type.class.fragl" },
 						"2": { "name": "entity.name.class.fragl" },
@@ -398,7 +398,7 @@
 		"tag-interior": {
 			"patterns": [
 				{
-					"begin": "<(?=::[a-zA-Z])",
+					"begin": "<(?=::[a-zA-Z])(?!.*?/>)",
 					"beginCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.begin.fragl" }
 					},
