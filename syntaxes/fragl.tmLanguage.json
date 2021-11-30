@@ -369,9 +369,24 @@
 			"name": "meta.parameter-list.fragl",
 			"patterns": [
 				{
+					"match": "(?<!\\w)_(?!\\w)",
+					"name": "punctuation.definition.tag.parameter.skipped.fragl"
+				},
+				{
 					"match": "\\b[a-zA-Z][.0-9_a-zA-Z]*\\b",
 					"name": "variable.parameter.fragl"
-				}
+				},
+				{
+					"match": "(::)([a-zA-Z][.0-9_a-zA-Z]*)\\b",
+					"name": "meta.parameter.class.fragl",
+					"captures": {
+						"1": { "name": "storage.type.class.fragl" },
+						"2": { "name": "entity.name.class.fragl"}
+					}
+				},
+				{ "include": "#constant" },
+				{ "include": "#number" },
+				{ "include": "#string" }
 			]
 		},
 		"class-parameter-list": {
