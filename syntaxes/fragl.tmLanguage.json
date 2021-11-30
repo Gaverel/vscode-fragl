@@ -195,8 +195,11 @@
 					"end": "(?<=[^\\s=])(?!\\s*=)|(?=/?>)",
 					"patterns": [
 						{
-							"match": "([^\\s\"'=<>`/]|/(?!>))+",
+							"match": "([^\\s\"#=<>`/]|/(?!>))+",
 							"name": "string.unquoted.fragl"
+						},
+						{
+							"include": "#reference"
 						},
 						{
 							"begin": "\"",
@@ -211,23 +214,7 @@
 									"name": "punctuation.definition.string.end.fragl"
 								}
 							},
-							"name": "string.quoted.double.fragl",
-							"patterns": []
-						},
-						{
-							"begin": "'",
-							"beginCaptures": {
-								"0": {
-									"name": "punctuation.definition.string.begin.fragl"
-								}
-							},
-							"end": "'",
-							"endCaptures": {
-								"0": {
-									"name": "punctuation.definition.string.end.fragl"
-								}
-							},
-							"name": "string.quoted.single.fragl",
+							"name": "string.quoted.fragl",
 							"patterns": []
 						},
 						{
