@@ -412,8 +412,16 @@
 					"match": "(@)([a-zA-Z][.0-9_a-zA-Z]*)\\b",
 					"name": "meta.parameter.modifier.fragl",
 					"captures": {
-						"1": { "name": "keyword.control.iterator.fragl" },
-						"2": { "name": "variable.parameter.fragl"}
+						"1": { "name": "keyword.control.slurp.fragl" },
+						"2": { "name": "variable.parameter.$2.fragl"}
+					}
+				},
+				{
+					"match": "(%)([a-zA-Z][.0-9_a-zA-Z]*)\\b",
+					"name": "meta.parameter.modifier.fragl",
+					"captures": {
+						"1": { "name": "storage.type.accumulator.fragl" },
+						"2": { "name": "entity.name.shadowed.$2.fragl"}
 					}
 				},
 				{
@@ -425,7 +433,7 @@
 					"name": "meta.parameter.modifier.fragl",
 					"captures": {
 						"1": { "name": "storage.type.class.fragl" },
-						"2": { "name": "entity.name.class.fragl"}
+						"2": { "name": "entity.name.class.$2.fragl"}
 					}
 				},
 				{ "include": "#constant" },
