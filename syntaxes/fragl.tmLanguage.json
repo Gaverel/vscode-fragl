@@ -159,7 +159,7 @@
 						"1": { "name": "storage.type.class.fragl" },
 						"2": { "name": "entity.name.class.fragl" }
 					},
-					"name": "meta.tag.class.opening.fragl"
+					"name": "meta.tag.class.$2.opening.fragl"
 				},
 				{
 					"begin": "([^\\x{0020}\"'<>/=\\x{0000}-\\x{001F}\\x{007C}\\x{007F}-\\x{009F}\\x{FDD0}-\\x{FDEF}\\x{FFFE}\\x{FFFF}\\x{1FFFE}\\x{1FFFF}\\x{2FFFE}\\x{2FFFF}\\x{3FFFE}\\x{3FFFF}\\x{4FFFE}\\x{4FFFF}\\x{5FFFE}\\x{5FFFF}\\x{6FFFE}\\x{6FFFF}\\x{7FFFE}\\x{7FFFF}\\x{8FFFE}\\x{8FFFF}\\x{9FFFE}\\x{9FFFF}\\x{AFFFE}\\x{AFFFF}\\x{BFFFE}\\x{BFFFF}\\x{CFFFE}\\x{CFFFF}\\x{DFFFE}\\x{DFFFF}\\x{EFFFE}\\x{EFFFF}\\x{FFFFE}\\x{FFFFF}\\x{10FFFE}\\x{10FFFF}]+)",
@@ -279,6 +279,10 @@
 		"operator": {
 			"patterns": [
 				{
+					"match": "(?<!<)@(?=[a-zA-Z]|\\()",
+					"name": "keyword.control.iterator.fragl"
+				},
+				{
 					"match": "\\b(?:add|sub|mul|div|rem|pow|trunc|round|floor|ceil)\\b",
 					"name": "keyword.operator.math.fragl"
 				},
@@ -295,7 +299,7 @@
 					"name": "keyword.operator.flip-flop.fragl"
 				},
 				{
-					"match": "(?<!\\?)\\?(?!\\?)|(?<![:}]):(?!:)",
+					"match": "\\?\\?|!!",
 					"name": "keyword.operator.ternary.fragl"
 				}
 			]
@@ -308,16 +312,15 @@
 				{ "include": "#number" },
 				{ "include": "#operator" },
 				{
-					"begin": "(?<!<)(@)?(\\()",
+					"begin": "\\(",
 					"beginCaptures": {
-						"1": { "name": "keyword.control.loop.list-prefix.fragl" },
-						"2": { "name": "punctuation.definition.list-literal.begin.fragl" }
+						"0": { "name": "punctuation.definition.sequence-literal.begin.fragl" }
 					},
 					"end": "\\)",
 					"endCaptures": {
-						"0": { "name": "punctuation.definition.list-literal.end.fragl" }
+						"0": { "name": "punctuation.definition.sequence-literal.end.fragl" }
 					},
-					"name": "meta.list-literal.fragl",
+					"name": "meta.sequence-literal.fragl",
 					"patterns": [
 						{
 							"include": "#argument"
@@ -325,12 +328,25 @@
 					]
 				},
 				{
-					"begin": "(?<=\\))\\s*(?={)",
-					"end": ":",
-					"endCaptures": {
-						"0": { "name": "keyword.control.function.loop.fragl" }
+					"begin": "\\[",
+					"beginCaptures": {
+						"0": { "name": "punctuation.definition.block-literal.begin.fragl" }
 					},
-					"name": "meta.list-literal.loop.fragl",
+					"end": "]",
+					"endCaptures": {
+						"0": { "name": "punctuation.definition.block-literal.end.fragl" }
+					},
+					"name": "meta.block-literal.fragl",
+					"patterns": [
+						{
+							"include": "#argument"
+						}
+					]
+				},
+				{
+					"begin": "(?<=])\\s*(?=\\{)",
+					"end": "(?<=\\})",
+					"name": "meta.function.anonymous.parameter-list.fragl",
 					"patterns": [
 						{
 							"include": "#parameter-list"
@@ -356,6 +372,10 @@
 							"include": "#argument"
 						}
 					]
+				},
+				{
+					"match": "(?<!\\w)%\\^(?!\\w)",
+					"name": "keyword.control.this.fragl"
 				},
 				{
 					"match": "(?<!\\w)%(?!\\w)",
@@ -393,17 +413,7 @@
 				{ "include": "#string" }
 			]
 		},
-		"class-parameter-list": {
-			"begin": "[",
-			"end": "]",
-			"name": "meta.parameter-list.class.fragl",
-			"patterns": [
-				{
-					"match": "\\b[a-zA-Z][.0-9_a-zA-Z]*\\b",
-					"name": "storage.class.parameter.fragl"
-				}
-			]
-		},
+		"class-parameter-list": {},
 		"reference": {
 			"patterns": [
 				{
@@ -471,7 +481,7 @@
 		"tag-interior": {
 			"patterns": [
 				{
-					"begin": "<(?=::[a-zA-Z])(?!.*?/>)",
+					"begin": "<(?=::[a-zA-Z][.0-9_a-zA-Z]*\\s*{)",
 					"beginCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.begin.fragl" }
 					},
@@ -494,7 +504,7 @@
 					"end": "(</)([a-zA-Z][.0-9_a-zA-Z]*)?(>)",
 					"endCaptures": {
 						"1": { "name": "punctuation.definition.tag.closing.begin.fragl" },
-						"2": { "name": "variable.name.loop.fragl" },
+						"2": { "name": "variable.other.loop.nominal.fragl" },
 						"3": { "name": "punctuation.definition.tag.closing.end.fragl" }
 					},
 					"name": "meta.tag.loop.interior.fragl",
@@ -538,14 +548,40 @@
 						{ "include": "$self" }
 					]
 				},
-								{
-					"begin": "<(?=(?:\\?|&)\\s*[a-zA-Z][.0-9_a-zA-Z]*\\(?)",
+				{
+					"begin": "<(?=(?:\\?|&)\\s*[a-zA-Z][.0-9_a-zA-Z]*\\s*\\()",
 					"beginCaptures": {
 						"0": { "name": "punctuation.definition.tag.cond.opening.begin.fragl" }
 					},
-					"end": "</[a-zA-Z][.0-9_a-zA-Z]*>",
+					"end": "(</)([a-zA-Z][.0-9_a-zA-Z]*)(>)",
 					"endCaptures": {
-						"0": { "name": "punctuation.definition.tag.cond.closing.fragl" }
+						"1": { "name": "punctuation.definition.tag.cond.closing.fragl" },
+						"2": { "name": "entity.name.function.fragl" },
+						"3": { "name": "punctuation.definition.tag.cond.closing.fragl" }
+					},
+					"name": "meta.tag.conrol.invocation.interior.fragl",
+					"patterns": [
+						{
+							"match": "(<)(:)(>)",
+							"captures": {
+								"1": { "name": "punctuation.definition.tag.cond.else.begin.fragl" },
+								"2": { "name": "keyword.control.cond.else.fragl" },
+								"3": { "name": "punctuation.definition.tag.cond.else.endfragl" }
+							}
+						},
+						{ "include": "$self" }
+					]
+				},
+				{
+					"begin": "<(?=(?:\\?|&)\\s*[a-zA-Z][.0-9_a-zA-Z]*)",
+					"beginCaptures": {
+						"0": { "name": "punctuation.definition.tag.cond.opening.begin.fragl" }
+					},
+					"end": "(</)([a-zA-Z][.0-9_a-zA-Z]*)(>)",
+					"endCaptures": {
+						"1": { "name": "punctuation.definition.tag.cond.closing.fragl" },
+						"2": { "name": "entity.name.variable.fragl" },
+						"3": { "name": "punctuation.definition.tag.cond.closing.fragl" }
 					},
 					"name": "meta.tag.conrol.interior.fragl",
 					"patterns": [
@@ -647,7 +683,7 @@
 		"tag": {
 			"patterns": [
 				{
-					"begin": "(?<=<)(::)([a-zA-Z][.0-9_a-zA-Z]*)(?=[\\{\\[])",
+					"begin": "(?<=<)(::)([a-zA-Z][.0-9_a-zA-Z]*)(?=[\\{\\[])(?!.*/>)",
 					"beginCaptures": {
 						"1": { "name": "storage.type.class.fragl" },
 						"2": { "name": "entity.name.class.fragl" }
@@ -656,7 +692,7 @@
 					"endCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.end.fragl" }
 					},
-					"name": "meta.tag.class.opening.fragl",
+					"name": "meta.tag.class.$2.opening.fragl",
 					"patterns": [
 						{
 							"begin": "\\[",
@@ -675,7 +711,7 @@
 				{
 					"begin": "(?<=<)(@)([a-zA-Z][.0-9_a-zA-Z]*)(?=\\s*{)",
 					"beginCaptures": {
-						"1": { "name": "keyword.control.loop.fragl" },
+						"1": { "name": "keyword.control.tag.loop.fragl" },
 						"2": { "name": "variable.name.loop.fragl" }
 					},
 					"end": ">",
@@ -690,8 +726,8 @@
 				{
 					"begin": "(?<=<)(\\?)([a-zA-Z][.0-9_a-zA-Z]*)",
 					"beginCaptures": {
-						"1": { "name": "keyword.control.loop.fragl" },
-						"2": { "name": "variable.name.loop.fragl" }
+						"1": { "name": "keyword.control.tag.cond.fragl" },
+						"2": { "name": "variable.name.cond.fragl" }
 					},
 					"end": ">",
 					"endCaptures": {
@@ -705,7 +741,7 @@
 				{
 					"begin": "(?<=<)(@)\\s*(\\()",
 					"beginCaptures": {
-						"1": { "name": "keyword.control.loop.fragl" },
+						"1": { "name": "keyword.control.tag.loop.fragl" },
 						"2": { "name": "punctuation.definition.loop.literal-list.begin.fragl" }
 					},
 					"end": "(\\))\\s*(?:(\\{)\\s*([a-zA-Z][.0-9_a-zA-Z]*)\\s*(\\}))?\\s*(>)",
@@ -724,7 +760,7 @@
 								{
 					"begin": "(?<=<)(&)\\s*(\\()",
 					"beginCaptures": {
-						"1": { "name": "keyword.control.loop.fragl" },
+						"1": { "name": "keyword.control.tag.cond.expression.fragl" },
 						"2": { "name": "punctuation.definition.loop.literal-list.begin.fragl" }
 					},
 					"end": "(\\))\\s*(>)",
@@ -740,8 +776,8 @@
 				{
 					"begin": "(?<=<)(\\?|&)\\s*([a-zA-Z][.0-9_a-zA-Z]*)?(\\()",
 					"beginCaptures": {
-						"1": { "name": "keyword.control.cond.fragl" },
-						"2": { "name": "entity.name.variable.fragl" },
+						"1": { "name": "keyword.control.tag.cond.fragl" },
+						"2": { "name": "entity.name.function.fragl" },
 						"3": { "name": "punctuation.definition.cond.argument-list.begin.fragl" }
 					},
 					"end": "(\\))(>)",
@@ -763,7 +799,7 @@
 					"endCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.end.fragl" }
 					},
-					"name": "meta.tag.function.opening.fragl",
+					"name": "meta.tag.function.$1.opening.fragl",
 					"patterns": [
 						{ "include": "#param-then-attributes" }
 					]
@@ -771,7 +807,7 @@
 				{
 					"begin": "(?<=<)(%)(\\.)?(?:([a-zA-Z][.0-9_a-zA-Z]*)(\\.))*([a-zA-Z][.0-9_a-zA-Z]*)(?=\\s*\\()",
 					"beginCaptures": {
-						"1": { "name": "keyword.control.invocation-slurp.fragl" },
+						"1": { "name": "keyword.control.tag.invocation.fragl" },
 						"2": { "name": "punctuation.definition.member-access.fragl" },
 						"3": { "name": "entity.name.object.fragl" },
 						"4": { "name": "punctuation.definition.member-access.fragl" },
@@ -781,7 +817,7 @@
 					"endCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.end.fragl" }
 					},
-					"name": "meta.tag.invocation.opening.fragl",
+					"name": "meta.tag.function.$5.invocation.opening.fragl",
 					"patterns": [
 						{ "include": "#argument" }
 					]
@@ -797,7 +833,7 @@
 					"endCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.end.fragl" }
 					},
-					"name": "meta.tag.function.opening.fragl",
+					"name": "meta.tag.function.operator.$2.opening.fragl",
 					"patterns": [
 						{ "include": "#param-then-attributes" }
 					]
@@ -811,7 +847,7 @@
 					"endCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.end.fragl" }
 					},
-					"name": "meta.tag.case.opening.fragl",
+					"name": "meta.tag.case.$1.opening.fragl",
 					"patterns": [
 						{ "include": "#attribute" }
 					]
@@ -825,7 +861,7 @@
 					"endCaptures": {
 						"0": { "name": "punctuation.definition.tag.opening.end.fragl" }
 					},
-					"name": "meta.tag.object.opening.fragl",
+					"name": "meta.tag.object.$1.opening.fragl",
 					"patterns": [
 						{ "include": "#attribute" }
 					]
